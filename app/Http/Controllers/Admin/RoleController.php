@@ -13,4 +13,20 @@ class RoleController extends Controller
         $roles = Role::all();
         return view('admin.roles.index', compact('roles'));
     }
+
+    public function create()
+    {
+        return view('admin.roles.create-edit');
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'required|min:3',
+        ]);
+
+        Role::create($data);
+
+        return to_route('admin.roles.index');
+    }
 }

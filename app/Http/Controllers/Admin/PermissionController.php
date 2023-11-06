@@ -13,4 +13,20 @@ class PermissionController extends Controller
         $permissions = Permission::all();
         return view('admin.permissions.index', compact('permissions'));
     }
+
+    public function create()
+    {
+        return view('admin.permissions.create-edit');
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'required',
+        ]);
+
+        Permission::create($data);
+
+        return to_route('admin.permissions.index');
+    }
 }

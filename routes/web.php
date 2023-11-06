@@ -26,7 +26,7 @@ Route::get('/dashboard', function () {
 Route::middleware(['auth', 'verified', 'role:admin'])->name('admin.')->prefix('admin')->group(function () {
     Route::get('/', [IndexController::class, 'index'])->name('index');
     Route::resource('/roles', RoleController::class);
-    Route::resource('/premissions', PermissionController::class);
+    Route::resource('/permissions', PermissionController::class);
 });
 
 Route::middleware('auth')->group(function () {
