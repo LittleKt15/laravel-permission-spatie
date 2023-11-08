@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class PermissionController extends Controller
 {
@@ -32,9 +33,10 @@ class PermissionController extends Controller
         return to_route('admin.permissions.index');
     }
 
-    public function edit (Permission $permission)
+    public function edit(Permission $permission)
     {
-        return view('admin.permissions.create-edit', compact('permission'));
+        $roles = Role::all();
+        return view('admin.permissions.create-edit', compact('permission', 'roles'));
     }
 
     public function update(Request $request, Permission $permission)
@@ -53,5 +55,25 @@ class PermissionController extends Controller
         $permission->delete();
 
         return back()->with('message', 'Permission Deleted Successfully!');
+    }
+
+    public function assignRole(Request $request, Permission $permission)
+    {
+        if ($permission->hasRole($request->role)) {
+            return back()->with('message', 'Role exists.');
+        } else {
+            $permission->assignRole($request->role);
+            return back()->with('message', 'Role assigned.');
+        }
+    }
+
+    public function removeRole(Permission $permission, Role $role)
+    {
+        if ($permission->hasRole($role)) {
+            $permission->removeRole($role);
+            return back()->with('message', 'Role Removed.');
+        } else {
+            return back()->with('message', 'Role does not Exists.');
+        }
     }
 }
